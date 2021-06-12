@@ -1,0 +1,65 @@
+{
+    // ##############################################################################
+    // you can change all the config at terminal use instruction: 
+    // $ python train.py <config name> -<param_name.sub_name...> <changed content>
+    //
+    // huge titles, including ['system','optimizer','dataset'], do not need to write. such as:
+    // $ python train.py __demo -remark this_is_a_test
+    // $ python train.py __demo -sgd.moment 0.6
+    // ##############################################################################
+    "system": {
+        "net": ["model_file_name","model_class_name"],
+        "remark": "",
+        // "remark" is used for brief noting at experiment's floder name
+        "time": null,
+        "gpu": [0],
+        // Supports multi-GPU. such as [0,2,3]
+        "net_param":{
+            
+        },
+        "loss_param":{
+            
+        },
+        "evaluate_param":{
+
+        }
+    },
+    "optimizer":{
+        "type": "adam",
+        "learning_rate": 5e-5,
+        "adam":{"weight_decay":1e-5},
+        "sgd":{"weight_decay": 1e-5,"moment":0.9},
+
+        "decay_rate": 0.1,
+        "milestones": [70],
+        // when reach the epoch that recorded in "milestones", lr = lr*decay_rate
+
+        "eval_on_train": false,
+        // if true, use train set for evaluating (No data disclosure)
+        "test_on_train": false,
+        // if true, use test set for evaluating
+        "max_epoch": 100,
+        "max_batch": null,
+        // <null> means use all the batch in dataset
+        "save_epoch": 0
+        // <0> means just save the best epoch, <any number> means save checkpoints every <any number>
+    },
+    "dataset": {
+        "file_name": "__demo",
+        "num_workers": 2,
+        "direction": ["%DATA%","dataset_path"],
+        // %DATA% will be automatically replaced by the path you write in file "RootPath.json"
+        // The "direction" will finally become:  %DATA%/<param 1>/<param 2>/...
+
+        // The parameters shared by train-set and test-set are written outside,
+        // and those different parameters you can write in "train" and "test" dict, respectively.
+        "train":{
+            "shuffle":true,
+            "batch_size": 16
+        },
+        "test": {
+            "shuffle":false,
+            "batch_size": 64
+        }
+    }
+}

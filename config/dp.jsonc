@@ -1,0 +1,67 @@
+{
+    "system": {
+        "net": ["dominant_pattern","DP"],
+        "remark": "",
+        "time": null,
+        "gpu": [0],
+        "net_param":{
+            "target_net":"vgg19",
+            // choose from ["alexnet","vgg16","vgg19","resnet50", "resnet152","googlenet",
+            //              "densenet121"]  which are pretrained in ImageNet
+            "pretrain_set":"ImageNet",
+            // choose from ["COCO","CIFAR10","CIFAR100","ImageNet"]
+            "test_as_saved":true,
+            "img_size":[3,224,224],
+            "epsilon":0.03922,
+            "feature_layer":-1
+            // "-1" means use the output of last layer in classifer
+            // "<num>" means use the input of <num>-th layer in classifer
+        },
+        "loss_param":{
+            "loss_type": "cos"
+            //choose from ["cos","mse","kdl"]
+        },
+        "evaluate_param":{
+            "topks":[1,3,5]
+        }
+    },
+    "optimizer":{
+        "type": "adam",
+        "learning_rate": 1e-2,
+        "adam":{"weight_decay":1e-5},
+        "sgd":{"weight_decay": 1e-5,"moment":0.9},
+
+        "decay_rate": 0.1,
+        "milestones": [20],
+
+        "test_on_train": true,
+        "eval_on_train": true,
+        "max_epoch": 10,
+        "max_batch": null,
+        "save_epoch": 0
+    },
+    "dataset": {
+        "file_name": "general_image_datasets",
+        "dataset_name": "COCO",
+        // choose from ["COCO","CIFAR10","ImageNet","BigGAN"]
+        "num_workers": 2,
+        "direction": ["%DATA%"],
+        "batch_size": 32,
+        "train":{
+            "shuffle":true,
+            "enhancement":{
+                "Resize":[256],
+                "RandomCrop":[224],
+                "RandomHorizontalFlip":[0.5],
+                "RandomVerticalFlip":[0.5]
+            }
+        },
+        "test": {
+            "shuffle":false,
+            "enhancement":{
+                "Resize":[256],
+                "CenterCrop":[224]
+            }
+        }
+    }
+}
